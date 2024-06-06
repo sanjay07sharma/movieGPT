@@ -112,3 +112,20 @@ index.css
 `
 Start your build process
 Run your build process with npm run start.
+
+
+# Feature we will build
+
+- Login/signup screenowse page
+    - Sign in/ Sign up Form
+    - zredirect to br
+- Browser (After Login)
+    - Header
+    - Main movie
+        -trailer in background
+        - Title description play button
+        - Movie suggestionns 
+        - Movie list * n
+- NetflixGPT
+    - Search Bar
+    - Movie Suggestion
