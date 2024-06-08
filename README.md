@@ -118,7 +118,7 @@ Run your build process with npm run start.
 
 - Login/signup screenowse page
     - Sign in/ Sign up Form
-    - zredirect to br
+    - redirect to login
 - Browser (After Login)
     - Header
     - Main movie

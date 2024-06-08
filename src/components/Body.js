@@ -7,7 +7,7 @@ const Body = () => {
     <div>
       <Router>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Login />} />
           <Route path="/browse" element={<Browse />} />
         </Routes>
       </Router>
