@@ -5,7 +5,7 @@ const Login = () => {
   const [signIn, setSignIn] = useState("Sign In");
   const toggleSignIn = (e) => {
     e.preventDefault();
-    setSignIn("Sign Up");
+    signIn === "Sign In" ? setSignIn("Sign Up") : setSignIn("Sign In");
     document.getElementById("name").classList.toggle("hidden");
     
   }
@@ -41,15 +41,14 @@ const Login = () => {
           >
             {signIn}
           </button>
-          <div className="text-gray-400">
-            New to Netflix?{" "}
-            <a
-              href="/"
+          <div className="text-gray-400 flex flex-wrap cursor-pointer">
+            {signIn === "Sign In" ? "New to Netflix?" : "Already a member? "}
+            <p
               className="text-blue-500 hover:text-blue-700"
               onClick={(e) => toggleSignIn(e)}
             >
-              Sign up now.
-            </a>
+              {signIn === "Sign In" ? "Sign up Now " : "Sign In"}
+            </p>
           </div>
         </form>
     </div>
