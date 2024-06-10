@@ -129,3 +129,9 @@ Run your build process with npm run start.
 - NetflixGPT
     - Search Bar
     - Movie Suggestion
+
+# Concepts
+
+- Routing
+- Form validation
+- useRef Hook
