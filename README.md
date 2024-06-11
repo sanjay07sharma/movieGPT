@@ -135,3 +135,26 @@ Run your build process with npm run start.
 - Routing
 - Form validation
 - useRef Hook
+
+# Create a Firebase account
+
+-Go to Firebase.
+    Click on "Get started".
+    Sign in with your Google account.
+    Create a Firebase project
+
+- Click on "Add project".
+    Enter a name for your project and accept the terms, then click "Continue".
+    You may also enable Google Analytics for the project, but this is optional. Click "Continue".
+    Select your Google Analytics account or create a new account, then click "Create project".
+    Add Firebase to your app
+
+On the project overview page, click the web icon (</>) to add Firebase to your web app.
+Register your app by entering your app's name. You can also set up Firebase Hosting at this stage by checking the box "Also set up Firebase Hosting for this app". Click "Register app".
+Follow the instructions to add the Firebase SDK to your app. This involves copying the provided code snippet and pasting it into your app.
+Set up Firebase Hosting
+
+Install the Firebase CLI (Command Line Interface) by running `npm install -g firebase-tools` in your terminal.
+Authenticate the Firebase CLI to your Google account by running `firebase login`.
+Initialize your project by running firebase init in your project's root directory. Select "Hosting" and follow the prompts to set up the project.
+Deploy your app by running `firebase deploy`.
