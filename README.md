@@ -158,3 +158,6 @@ Install the Firebase CLI (Command Line Interface) by running `npm install -g fir
 Authenticate the Firebase CLI to your Google account by running `firebase login`.
 Initialize your project by running firebase init in your project's root directory. Select "Hosting" and follow the prompts to set up the project.
 Deploy your app by running `firebase deploy`.
+
+
+# create a signup user account
