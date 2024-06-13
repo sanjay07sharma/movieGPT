@@ -1,7 +1,8 @@
 import Header from "./Header"
 import { useState, useRef } from "react"
 import { checkValidData } from "../utils/validate"
-import {  getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../utils/firebase"
 
 const Login = () => {
   const [signIn, setSignIn] = useState("Sign In");
@@ -21,36 +22,34 @@ const Login = () => {
     if (isValidCredentials) {
       setErrorMessages(isValidCredentials);
     }
-    if (!signIn) {
-      const auth = getAuth();
-      createUserWithEmailAndPassword(auth, email?.current?.value, password?.current?.value)
-        .then((userCredential) => {
+    if (signIn === "Sign Up" && !isValidCredentials) {
+      createUserWithEmailAndPassword(
+        auth,
+        email?.current?.value,
+        password?.current?.value
+      ).then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(user);
-          // ...
+          setErrorMessages("");
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(errorMessage);
+          setErrorMessages(errorCode +"-"+ errorMessage);
           // ..
         });
     } else {
       // Sign in
-      const auth = getAuth();
       signInWithEmailAndPassword(auth, email?.current?.value, password?.current?.value)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(user);
-          // ...
+          setErrorMessages("");
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
-          console.log(errorMessage);
-          // ..
+          setErrorMessages(errorCode +"-"+ errorMessage);
         });
     }
   };
@@ -59,9 +58,9 @@ const Login = () => {
     <div>
         <Header />
         <div className="absolute">
-          <img src="https://assets.nflxext.com/ffe/siteui/vlv3/cacfadb7-c017-4318-85e4-7f46da1cae88/e43aa8b1-ea06-46a5-abe3-df13243e718d/IN-en-20240603-popsignuptwoweeks-perspective_alpha_website_small.jpg" alt="logo" />
+          <img className="h-fit w-fit" src="https://assets.nflxext.com/ffe/siteui/vlv3/cacfadb7-c017-4318-85e4-7f46da1cae88/e43aa8b1-ea06-46a5-abe3-df13243e718d/IN-en-20240603-popsignuptwoweeks-perspective_alpha_website_large.jpg" alt="logo" />
         </div>
-        <form onSubmit={(e) => e.preventDefault()} className="w-3/12 absolute bg-black my-52 mx-auto p-14 left-0 right-0 bg-opacity-80">
+        <form onSubmit={(e) => e.preventDefault()} className="w-full sm:w-3/4 md:w-1/2 lg:w-1/3 xl:w-1/4 absolute bg-black my-52 mx-auto p-14 left-0 right-0 bg-opacity-80">
           <h1 className="text-2xl font-bold text-white mb-4">{signIn}</h1>
           <input
               ref={name}
