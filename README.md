@@ -161,3 +161,14 @@ Deploy your app by running `firebase deploy`.
 
 
 # create a signup user account
+
+
+# Setup Redux Store
+- install @reduxjs/toolkit
+- install react-redux
+- create appStore.js -> `configureStore` from  with reducer function from `@reduxjs/toolkit`.
+- configure userSlices with `createSlice` with reducer functions `addUser`, `removeUser` from `@reduxjs/toolkit`.
+- add userSlice created to appStore
+- Provide store to your app using `Provider` which comes from `react-redux`.
+
+"In short create a store, create a slice add slice to store reducer function and then provide it to app" 
