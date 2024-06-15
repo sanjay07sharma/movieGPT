@@ -172,3 +172,8 @@ Deploy your app by running `firebase deploy`.
 - Provide store to your app using `Provider` which comes from `react-redux`.
 
 "In short create a store, create a slice add slice to store reducer function and then provide it to app" 
+
+# Set up /browse on signIn
+- setting an observer on the Auth object provided by firebase `onAuthStateChanged` from `firebase/auth`
+- With signIn observation we `navigate` to `/browse` using `useNavigate` from react-router-dom.
+- With sign out `naviagte` to `/`.
