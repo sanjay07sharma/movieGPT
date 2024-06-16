@@ -1,7 +1,7 @@
 import Header from "./Header"
 import { useState, useRef } from "react"
 import { checkValidData } from "../utils/validate"
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../utils/firebase"
 import { useNavigate } from "react-router-dom";
 
@@ -32,6 +32,14 @@ const Login = () => {
       ).then((userCredential) => {
           // Signed in
           const user = userCredential.user;
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: "https://lh3.googleusercontent.com/-n7wW57uuKLs/AAAAAAAAAAI/AAAAAAAAAAA/ALKGfklpc505dMBrrXjsbb_sivdQ1bqUDA/photo.jpg?sz=46",
+          }).then(() => {
+            navigate("/browse")
+          }).catch((error) => {
+            setErrorMessages(error.message)
+          });
           navigate("/browse");
           setErrorMessages("");
         })
@@ -46,7 +54,7 @@ const Login = () => {
       signInWithEmailAndPassword(auth, email?.current?.value, password?.current?.value)
         .then((userCredential) => {
           // Signed in
-          const user = userCredential.user;
+          // const user = userCredential.user;
           setErrorMessages("");
           navigate("/browse");
         })
