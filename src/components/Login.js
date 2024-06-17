@@ -4,6 +4,8 @@ import { checkValidData } from "../utils/validate"
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../utils/firebase"
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
   const [signIn, setSignIn] = useState("Sign In");
@@ -12,6 +14,7 @@ const Login = () => {
   const password = useRef(null);
   const name = useRef(null);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const toggleSignIn = (e) => {
     e.preventDefault();
@@ -36,7 +39,9 @@ const Login = () => {
             displayName: name.current.value,
             photoURL: "https://lh3.googleusercontent.com/-n7wW57uuKLs/AAAAAAAAAAI/AAAAAAAAAAA/ALKGfklpc505dMBrrXjsbb_sivdQ1bqUDA/photo.jpg?sz=46",
           }).then(() => {
-            navigate("/browse")
+            const { uid, email, displayName, photoURL } = auth.currentUser;
+            dispatch(addUser({ uid: uid, email: email, displayName: displayName, photoURL: photoURL}));
+            navigate("/browse");
           }).catch((error) => {
             setErrorMessages(error.message)
           });
