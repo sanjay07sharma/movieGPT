@@ -177,3 +177,6 @@ Deploy your app by running `firebase deploy`.
 - setting an observer on the Auth object provided by firebase `onAuthStateChanged` from `firebase/auth`
 - With signIn observation we `navigate` to `/browse` using `useNavigate` from react-router-dom.
 - With sign out `naviagte` to `/`.
+
+# Setting up movie DB
+- Fetch from TMDB Movies.
