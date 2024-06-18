@@ -180,3 +180,5 @@ Deploy your app by running `firebase deploy`.
 
 # Setting up movie DB
 - Fetch from TMDB Movies.
+- Create account on TMDB, register your app.
+- Setup methods in browse component to get movie data using TMDB api
