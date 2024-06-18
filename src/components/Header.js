@@ -6,6 +6,7 @@ import { onAuthStateChanged } from "firebase/auth";
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
+import { LOGO_URL } from "../utils/constants";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -20,7 +21,7 @@ const Header = () => {
   }
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User is signed in
         const { uid, email, displayName, photoURL } = user;
@@ -32,11 +33,12 @@ const Header = () => {
         navigate("/");
       }
     });
+    return () => unsubscribe();
   },[]);
 
   return (
       <div className="absolute w-screen px-8 py-2 b-gradient-to-bottom from-black z-10 flex justify-between">
-        <img className="w-44" src="https://cdn.cookielaw.org/logos/dd6b162f-1a32-456a-9cfe-897231c7763c/4345ea78-053c-46d2-b11e-09adaef973dc/Netflix_Logo_PMS.png" alt="logo" />
+        <img className="w-44" src={LOGO_URL} alt="logo" />
       {(user !== null) && <div className="flex">
         <img className="w-10 h-10 m-2 rounded-lg" alt="user icon" src={user.photoURL}/>
         <button className="font-bold bg-red-500 m-2 w-20 h-10 rounded-lg" onClick={handleSignOut}>Sign Out</button>
