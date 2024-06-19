@@ -182,3 +182,4 @@ Deploy your app by running `firebase deploy`.
 - Fetch from TMDB Movies.
 - Create account on TMDB, register your app.
 - Setup methods in browse component to get movie data using TMDB api
+- Setup movie slice in redux
