@@ -181,5 +181,12 @@ Deploy your app by running `firebase deploy`.
 # Setting up movie DB
 - Fetch from TMDB Movies.
 - Create account on TMDB, register your app.
-- Setup methods in browse component to get movie data using TMDB api
-- Setup movie slice in redux
+- Setup methods in browse component to get movie data using TMDB api.
+- Setup movie slice in redux.
+- Custom hook for now Playing movies.
+- Planning for Main Container and Secondary Container.
+- Fetch data for trailer video.
+- Update the store with trialer video.
+- Embedd the youtube video made it autoplay.
+- Tailwind css to make mainContainer look awesome.
+- Build Secondary component.
