@@ -19,6 +19,11 @@ const SecondaryContainer = () => {
       - Show the data in SecondaryContainer
       */}
       <MovieList title={"Now Playing"} movies={movies.addNowPlayingMovie}/>
+      <MovieList title={"Popular"} movies={movies.addPopularMovies}/>
+      <MovieList title={"Top Rated"} movies={movies.addTopRatedMovies}/>
+      <MovieList title={"Upcoming"} movies={movies.addUpcomingMovies}/>
+      {/* <MovieList title={"Upcoming"} movies={movies.addNowPlayingMovie}/>
+      <MovieList title={"Documentry"} movies={movies.addNowPlayingMovie}/> */}
     </div>
   )
 }
