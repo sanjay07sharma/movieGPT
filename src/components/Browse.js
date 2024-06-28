@@ -9,15 +9,6 @@ const Browse = () => {
       <Header/>
       <MainContainer/>
       <SecondaryContainer/>
-      {/*
-      Planning how to structure the Browse component:
-        MainContainer
-          - VideoBackground
-          - Video Title
-        SecondaryContainer
-          - MovieList * n
-          - MovieCard * n
-      */}
     </div>
   )
 }

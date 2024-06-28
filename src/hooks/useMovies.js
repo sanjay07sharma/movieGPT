@@ -1,14 +1,39 @@
 
-import useNowPlayingMovies from "../hooks/useNowPlayingMovies"
-import usePopularMovies from "../hooks/usePopularMovies"
-import useTopRatedMovies from "../hooks/useTopRatedMovies"
-import useUpcomingMovies from "../hooks/useUpcomingMovies"
+import {API_OPTIONS} from "../utils/constants"
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { addNowPlayingMovie, addTopRatedMovies, addPopularMovies, addUpcomingMovies } from "../utils/movieSlice";
 
 const useMovies = () => {
-    useNowPlayingMovies();
-    usePopularMovies();
-    useTopRatedMovies();
-    useUpcomingMovies();
+const dispatch = useDispatch();
+const movieGenres = ["now_playing", "popular", "top_rated", "upcoming"];
+
+const getMovieGenres = async (genres) => {
+  const url = 'https://api.themoviedb.org/3/movie/'+{genres}+'?page=1';
+  const data = await fetch(url, API_OPTIONS);
+  const json = await data.json();
+  switch (genres) {
+    case "now_playing":
+      dispatch(addNowPlayingMovie(json.results));
+      break;
+    case "popular":
+      dispatch(addPopularMovies(json.results));
+      break;
+    case "top_rated":
+      dispatch(addTopRatedMovies(json.results));
+      break;
+    case "upcoming":
+      dispatch(addUpcomingMovies(json.results));
+      break;
+    default:
+  }
+}
+
+useEffect(() => {
+    movieGenres.forEach((genre) => {
+        getMovieGenres(genre);
+    });
+}, []);
 }
 
 export default useMovies;

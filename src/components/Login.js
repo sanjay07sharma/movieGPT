@@ -49,14 +49,12 @@ const Login = () => {
           const errorCode = error.code;
           const errorMessage = error.message;
           setErrorMessages(errorCode +"-"+ errorMessage);
-          // ..
         });
     } else {
       // Sign in
       signInWithEmailAndPassword(auth, email?.current?.value, password?.current?.value)
         .then((userCredential) => {
           // Signed in
-          // const user = userCredential.user;
           setErrorMessages("");
         })
         .catch((error) => {
