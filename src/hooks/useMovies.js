@@ -33,7 +33,7 @@ useEffect(() => {
     movieGenres.forEach((genre) => {
         getMovieGenres(genre);
     });
-}, []);
+}, [movieGenres]);
 }
 
 export default useMovies;

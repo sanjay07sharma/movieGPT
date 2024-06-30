@@ -190,3 +190,7 @@ Deploy your app by running `firebase deploy`.
 - Embedd the youtube video made it autoplay.
 - Tailwind css to make mainContainer look awesome.
 - Build Secondary component.
+- Build Movie list
+- Build movieCard
+
+# Setup gpt api
