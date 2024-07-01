@@ -1,9 +1,9 @@
 
-const GPTsearch = () => {
+const GptSearch = () => {
     return (
         <div>
             Gpt search component.
         </div>
     )
 }
-export default GPTsearch
+export default GptSearch
