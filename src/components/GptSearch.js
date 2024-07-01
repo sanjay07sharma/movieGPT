@@ -1,9 +1,12 @@
+import GptMovieSuggestion from "./GptMovieSuggestion"
+import GptSearchBar from "./GptSearchBar"
 
-const GPTsearch = () => {
+const GptSearch = () => {
     return (
         <div>
-            Gpt search component.
+            <GptSearchBar/>
+            <GptMovieSuggestion/>
         </div>
     )
 }
-export default GPTsearch
+export default GptSearch
