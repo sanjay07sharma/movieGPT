@@ -9,7 +9,7 @@ const dispatch = useDispatch();
 const movieGenres = ["now_playing", "popular", "top_rated", "upcoming"];
 
 const getMovieGenres = async (genres) => {
-  const url = 'https://api.themoviedb.org/3/movie/'+{genres}+'?page=1';
+  const url = 'https://api.themoviedb.org/3/movie/'+genres+'?page=1';
   const data = await fetch(url, API_OPTIONS);
   const json = await data.json();
   switch (genres) {

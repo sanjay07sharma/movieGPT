@@ -6,7 +6,7 @@ export const API_OPTIONS = {
     method: 'GET',
     headers:{
         accept: "application/json",
-        Authorization: "Bearer YOUR_ACCESS_TOKEN",
+        Authorization: "Bearer YOUR_TOKEN",
     },
 }
 
