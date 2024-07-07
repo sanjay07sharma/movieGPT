@@ -197,4 +197,39 @@ Deploy your app by running `firebase deploy`.
 - Build Movie list
 - Build movieCard
 
-# Setup gpt api
+## Adding OpenAI Integration for Movie Recommendations
+
+To enhance the movie recommendation feature in your application,
+follow these steps to integrate OpenAI's GPT model into the `GptSearchBar` component.
+This will allow users to receive movie suggestions directly from the OpenAI API.
+
+1. **Integrate OpenAI API in `GptSearchBar.js`:**
+   - Modify `GptSearchBar.js` to include functionality for fetching movie suggestions from the OpenAI API.
+   - Implement input handling for initiating API calls upon user interaction.
+
+2. **Handle Search Input and Button Clicks:**
+   - Add a search input field and a button in the `GptSearchBar` component.
+   - Implement `handleGptSearchClick` function to process user input and initiate
+   a fetch request to the OpenAI API for movie recommendations.
+
+3. **Update `package.json`:**
+   - Add the OpenAI SDK to your project dependencies by running
+   `npm install openai@^4.52.3` or adding `"openai": "^4.52.3"` manually to your `package.json` file.
+
+4. **Create an OpenAI Utility File:**
+   - Create a utility file named `openAi.js` in your utilities folder.
+   - Initialize the OpenAI SDK with your API key in this file.
+
+5. **Update Project Configuration:**
+   - Ensure that your `package-lock.json` is updated with the newly added dependencies by running `npm install`.
+   - Add your OpenAI API key to a constants file (e.g., `constants.js`).
+   Make sure to name the constant `OPENAI_KEY` and keep it secure.
+
+6. **Implementing the Feature:**
+   - Use the search input to capture user queries.
+   - Upon clicking the search button, use the `handleGptSearchClick`
+   function to send the query to the OpenAI API and fetch suggestions.
+   - Log the results to the console for further processing or directly display them in your UI.
+
+This integration allows the `GptSearchBar` component to leverage OpenAI's powerful GPT-3.5 model
+for generating on-demand movie recommendations, enhancing the user experience by providing personalized suggestions.
