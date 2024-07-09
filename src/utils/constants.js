@@ -6,7 +6,7 @@ export const API_OPTIONS = {
     method: 'GET',
     headers:{
         accept: "application/json",
-        Authorization: "Bearer YOUR_KEY_HERE",
+        Authorization: "Bearer YOUR_API_KEY",
     },
 }
 
@@ -30,4 +30,4 @@ export const SUPPORTED_LANGUAGES = [
     {identifier : "kn", name : "Kannada"},
 ]
 
-export const OPENAI_KEY = "YOUR_KEY_HERE"
+export const OPENAI_KEY = "YOUR_API_KEY";

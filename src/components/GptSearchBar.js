@@ -1,11 +1,21 @@
 import React, { useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import language from '../utils/languageConstants';
 import {openAi} from '../utils/openAi';
+import { API_OPTIONS } from '../utils/constants';
+import { addGptMovieResult } from '../utils/gptSlice';
 
 const GptSearchBar = () => {
   const languageKey = useSelector(store => store.config.lang);
+  const dispatch = useDispatch()
   const searchText = useRef(null);
+
+  const searchMovieTMDB  = async (movieName) => {
+    const data = await fetch(`https://api.themoviedb.org/3/search/movie?query=${movieName}`, API_OPTIONS);
+    const json = await data.json();
+    return json.results;
+  };
+
   const handleGptSearchClick = async () => {
     // Make api calls to GPT API and get movie results
 
@@ -13,12 +23,19 @@ const GptSearchBar = () => {
       + searchText.current.value +
       " only give me the names of 5 movies, comma separated. Like the example ahead Example Result : Gadar, Sholay, Golmal, Partner, Hera Pheri";
 
-    const chatCompletion = await openAi.chat.completions.create({
+    openAi.chat.completions.create({
       messages: [{ role: 'user', content: gptSearchQuery }],
       model: 'gpt-3.5-turbo',
+    }).then((response) => {
+      const movies = response.data.choices[0].message.content.split(",");
+      movies.map((movie) => {
+        const promiseArray = searchMovieTMDB(movie);
+        const movieResult = Promise.all(promiseArray);
+        dispatch(addGptMovieResult({movieName: movie, movieResult: movieResult}));
+      });
+    }).catch((error) => {
+      console.log(error);
     });
-    // Plan further steps to display the results
-    console.log(chatCompletion.data);
   };
   return (
     <div className="pt-[20%] flex justify-center bg-black bg-opacity-20">
