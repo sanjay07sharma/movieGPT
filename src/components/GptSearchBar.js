@@ -25,7 +25,7 @@ const GptSearchBar = () => {
 
     openAi.chat.completions.create({
       messages: [{ role: 'user', content: gptSearchQuery }],
-      model: 'gpt-3.5-turbo',
+      model: 'babbage-002',
     }).then((response) => {
       const movies = response.data.choices[0].message.content.split(",");
       movies.map((movie) => {

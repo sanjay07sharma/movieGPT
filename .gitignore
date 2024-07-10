@@ -1,3 +1,4 @@
 /build
 /.firebase
 /node_modules
+.env
