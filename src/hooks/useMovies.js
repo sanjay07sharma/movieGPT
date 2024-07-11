@@ -3,10 +3,12 @@ import {API_OPTIONS} from "../utils/constants"
 import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { addNowPlayingMovie, addTopRatedMovies, addPopularMovies, addUpcomingMovies } from "../utils/movieSlice";
+import { useSelector } from "react-redux";
 
 const useMovies = () => {
 const dispatch = useDispatch();
 const movieGenres = ["now_playing", "popular", "top_rated", "upcoming"];
+const popularMovies = useSelector(store => store.movies.addNowPlayingMovie)
 
 const getMovieGenres = async (genres) => {
   const url = 'https://api.themoviedb.org/3/movie/'+genres+'?page=1';
@@ -30,9 +32,11 @@ const getMovieGenres = async (genres) => {
 }
 
 useEffect(() => {
+  if (!popularMovies) {
     movieGenres.forEach((genre) => {
         getMovieGenres(genre);
     });
+  }
 }, [movieGenres]);
 }
 
