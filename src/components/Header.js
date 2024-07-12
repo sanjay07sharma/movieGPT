@@ -48,8 +48,8 @@ const Header = () => {
   }
 
   return (
-      <div className="absolute w-screen px-8 py-2 b-gradient-to-bottom from-black z-10 flex justify-between">
-        <img className="w-44" src={LOGO_URL} alt="logo" />
+      <div className="absolute w-screen px-8 py-2 b-gradient-to-bottom from-black z-10 flex flex-col md:flex-row justify-between">
+        <img className="w-44 mx-auto md:mx-0" src={LOGO_URL} alt="logo" />
       {(user !== null) && <div className="flex">
         {showGptSearch && <select className="m-2 w-20 h-10  bg-red-500 text-white rounded-lg" onChange={handleLanguageChange}>
             {SUPPORTED_LANGUAGES.map((language) => (
