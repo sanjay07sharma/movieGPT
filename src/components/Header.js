@@ -48,7 +48,7 @@ const Header = () => {
   }
 
   return (
-      <div className="absolute w-screen px-8 py-2 b-gradient-to-bottom from-black z-10 flex flex-col md:flex-row justify-between">
+      <div className="absolute w-screen px-8 py-2 b-gradient-to-bottom from-black z-10 flex flex-col justify-between md:flex-row">
         <img className="w-44 mx-auto md:mx-0" src={LOGO_URL} alt="logo" />
       {(user !== null) && <div className="flex">
         {showGptSearch && <select className="m-2 w-20 h-10  bg-red-500 text-white rounded-lg" onChange={handleLanguageChange}>
@@ -56,7 +56,7 @@ const Header = () => {
               <option key={language.identifier} value={language.identifier}>{language.name}</option>
             ))}
         </select>}
-        <button className="m-2 w-20 h-10  bg-red-500 text-white rounded-lg" onClick={handleGptSearchClick}>GPTsearch</button>
+        <button className="m-2 w-20 h-10  bg-red-500 text-white rounded-lg" onClick={handleGptSearchClick}>{showGptSearch ? "Homepage" : "GPTsearch"}</button>
         <img className="w-10 h-10 m-2 rounded-lg" alt="user icon" src={user.photoURL}/>
         <button className="font-bold bg-red-500 m-2 w-20 h-10 rounded-lg" onClick={handleSignOut}>Sign Out</button>
       </div>}
