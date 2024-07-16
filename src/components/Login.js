@@ -6,9 +6,11 @@ import { auth } from "../utils/firebase"
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { USER_AVATAR, BG_URL } from "../utils/constants";
+import ChoosePlan from "./ChoosePlan";
 
 const Login = () => {
   const [signIn, setSignIn] = useState("Sign In");
+  const [choosePlan, setChoosePlan] = useState(false);
   const [errorMessages, setErrorMessages] = useState([]); // [emailError, passwordError
   const email = useRef(null);
   const password = useRef(null);
@@ -18,7 +20,11 @@ const Login = () => {
   const toggleSignIn = (e) => {
     e.preventDefault();
     signIn === "Sign In" ? setSignIn("Sign Up") : setSignIn("Sign In");
+    if (signIn === "Sign Up") {
+      setChoosePlan(true);
+    }
     document.getElementById("name").classList.toggle("hidden");
+    // render chosePlan Conponent
   }
 
   const handleButtonClick = (e) => {
@@ -68,6 +74,9 @@ const Login = () => {
   return (
     <div>
         <Header />
+        {
+          choosePlan && <ChoosePlan/>
+        }
         <div className="absolute">
           <img className="h-screen object-cover md:w-screen" src={BG_URL} alt="logo" />
         </div>
