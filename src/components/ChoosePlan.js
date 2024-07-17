@@ -60,23 +60,39 @@ const ChooseAPlan = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 pt-6 md:p-6 lg:p-12">
-      <h1 className="text-3xl font-bold mb-4">Choose the plan that's right for you</h1>
-      <div className="flex flex-wrap -mx-4">
-        {plans.map((plan) => (
-          <div key={plan.name} className="w-full md:w-1/2 xl:w-1/4 p-4 sm:p-6">
-            <div
-              className="bg-white rounded shadow-md p-4 sm:p-6 cursor-pointer"
-              onClick={() => handlePlanClick(plan)}
-            >
-              <h2 className="text-lg font-bold">{plan.name}</h2>
-              <p className="text-gray-600">{plan.resolution}</p>
-              <p className="text-lg font-bold">Monthly price: {plan.monthlyPrice}</p>
-              <p className="text-gray-600">Video and sound quality: {plan.videoSoundQuality}</p>
-              <p className="text-gray-600">Supported devices: {plan.supportedDevices}</p>
-              <p className="text-gray-600">Devices your household can watch at the same time: {plan.devicesAtSameTime}</p>
-              <p className="text-gray-600">Download devices: {plan.downloadDevices}</p>
-            </div>
+    <div className="h-[75%] pt-[30%] md:pt-[15%] md:w-full md:mx-auto p-4 sm:p-8 relative">
+      <h1 className="md:text-3xl font-bold mb-8 text-center text-white">Choose the plan that's right for you</h1>
+      <div className="w-76 h-36 flex flex-wrap justify-center md:space-x-6 space-y-4">
+        {plans.map((plan, index) => (
+          <div
+            key={plan.name}
+            className={`relative w-full sm:w-80 p-6 bg-white rounded-lg shadow-md ${index === 2 ? 'border-4 border-purple-500' : ''} cursor-pointer hover:shadow-lg transition-shadow duration-200`}
+            onClick={() => handlePlanClick(plan)}
+          >
+            {index === 2 && (
+              <div className="absolute top-0 right-0 bg-purple-500 text-white text-sm font-bold py-1 px-4 rounded-full">
+                Most Popular
+              </div>
+            )}
+            <h2 className={`text-2xl font-bold mb-2 ${index === 2 ? 'text-purple-600' : 'text-blue-600'}`}>{plan.name}</h2>
+            <hr className="my-2"/>
+            <p className="text-gray-600 mb-2">{plan.resolution}</p>
+            <hr className="my-2"/>
+            <p className="text-2xl font-bold mb-4">₹{plan.monthlyPrice}</p>
+            <hr className="my-2"/>
+            <p className="text-gray-600 mb-2">Video and sound quality: {plan.videoSoundQuality}</p>
+            {plan.spatialAudio && (
+              <>
+                <hr className="my-2"/>
+                <p className="text-gray-600 mb-2">Spatial audio (immersive sound): Included</p>
+              </>
+            )}
+            <hr className="my-2"/>
+            <p className="text-gray-600 mb-2">Supported devices: {plan.supportedDevices}</p>
+            <hr className="my-2"/>
+            <p className="text-gray-600 mb-2">Devices your household can watch at the same time: {plan.devicesAtSameTime}</p>
+            <hr className="my-2"/>
+            <p className="text-gray-600">Download devices: {plan.downloadDevices}</p>
           </div>
         ))}
       </div>

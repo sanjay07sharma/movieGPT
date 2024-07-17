@@ -5,5 +5,6 @@ module.exports = override(
   addWebpackAlias({
     "crypto": path.resolve(__dirname, 'node_modules/crypto-browserify'),
     "stream": false,
+    "vm": false,
   })
 );
