@@ -1,5 +1,6 @@
-import Razorpay from 'razorpay';
+// import Razorpay from 'razorpay';
 import { useState } from 'react';
+import { RAZORPAY_OPTIONS } from '../utils/constants';
 
 const plans = [
   {
@@ -42,21 +43,46 @@ const plans = [
 
 const ChooseAPlan = () => {
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [showRazorpay, setShowRazorpay] = useState(false);
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement('script');
+      script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const displayRazorpay = async (plan) => {
+    const res = await loadRazorpayScript();
+
+    if (!res) {
+      alert('Razorpay SDK failed to load. Are you online?');
+      return;
+    }
+
+    const options = {
+      ...RAZORPAY_OPTIONS,
+      amount: plan.monthlyPrice.replace('₹', '') * 100, // Amount in paise
+      handler: (response) => handlePaymentSuccess(response.razorpay_payment_id),
+      modal: {
+        ondismiss: () => console.log('Transaction cancelled'),
+      },
+    };
+
+    const paymentObject = new window.Razorpay(options);
+    paymentObject.open();
+  };
 
   const handlePlanClick = (plan) => {
     setSelectedPlan(plan);
-    setShowRazorpay(true);
+    displayRazorpay(plan);
   };
 
   const handlePaymentSuccess = (paymentId) => {
     console.log(`Payment successful: ${paymentId}`);
     // Handle payment success logic here
-  };
-
-  const handlePaymentError = (error) => {
-    console.log(`Payment error: ${error}`);
-    // Handle payment error logic here
   };
 
   return (
@@ -81,12 +107,6 @@ const ChooseAPlan = () => {
             <p className="text-2xl font-bold mb-4">₹{plan.monthlyPrice}</p>
             <hr className="my-2"/>
             <p className="text-gray-600 mb-2">Video and sound quality: {plan.videoSoundQuality}</p>
-            {plan.spatialAudio && (
-              <>
-                <hr className="my-2"/>
-                <p className="text-gray-600 mb-2">Spatial audio (immersive sound): Included</p>
-              </>
-            )}
             <hr className="my-2"/>
             <p className="text-gray-600 mb-2">Supported devices: {plan.supportedDevices}</p>
             <hr className="my-2"/>
@@ -96,18 +116,6 @@ const ChooseAPlan = () => {
           </div>
         ))}
       </div>
-      {showRazorpay && (
-        <Razorpay
-          amount={selectedPlan.monthlyPrice}
-          currency="INR"
-          name="Netflix"
-          description="Monthly subscription"
-          handler={(response) => handlePaymentSuccess(response.razorpay_payment_id)}
-          modal={{
-            ondismiss: () => setShowRazorpay(false),
-          }}
-        />
-      )}
     </div>
   );
 };

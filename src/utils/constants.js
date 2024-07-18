@@ -29,3 +29,25 @@ export const SUPPORTED_LANGUAGES = [
     {identifier : "gu", name : "Gujarati"},
     {identifier : "kn", name : "Kannada"},
 ]
+
+
+export const RAZORPAY_OPTIONS  = {
+    key_id: process.env.REACT_APP_RAZORPAY_KEY_ID,
+    key_secret: process.env.REACT_APP_RAZORPAY_KEY_ID,
+    currency: "INR",
+    name: "Netflix",
+    description: "Test Transaction",
+    order_id: "order_IluGWxBm9U8zJ8", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+    callback_url: "https://eneqd3r9zrjok.x.pipedream.net/",// 
+    prefill: {
+        "name": "Admin",
+        "email": "admin@gmail.com.com",
+        "contact": "9000090000"
+    },
+    notes: {
+        "address": "Razorpay Corporate Office"
+    },
+    theme: {
+        "color": "#3399cc"
+    }
+};
