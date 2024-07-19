@@ -233,3 +233,22 @@ This will allow users to receive movie suggestions directly from the OpenAI API.
 
 This integration allows the `GptSearchBar` component to leverage OpenAI's powerful GPT-3.5 model
 for generating on-demand movie recommendations, enhancing the user experience by providing personalized suggestions.
+
+
+### Anthropic AI SDK integration
+
+1. **Add Anthropic AI SDK to dependencies**
+   - Added `@anthropic-ai/sdk` version `^0.24.3` to `package.json` and `package-lock.json`.
+   - Updated `GptSearchBar.js` to use the Anthropic API for movie recommendations.
+
+2. **Integrate Anthropic API in GptSearchBar component**
+   - Replaced OpenAI API calls with Anthropic API for fetching movie suggestions.
+   - Initialized Anthropic client with API key from `constants.js`.
+
+3. **Update GptSearchBar styling and functionality**
+   - Added semicolons and formatted code for consistency.
+   - Improved API call handling and error logging.
+   - Updated movie search logic to trim movie names.
+
+4. **Store Anthropic API key in constants**
+   - Added `ANTHROPIC_API_KEY` to `constants.js` for secure access in API calls.
