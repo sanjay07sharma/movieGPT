@@ -1,4 +1,3 @@
-// import Razorpay from 'razorpay';
 import { useState } from 'react';
 import { RAZORPAY_OPTIONS } from '../utils/constants';
 
@@ -6,7 +5,7 @@ const plans = [
   {
     name: 'Premium',
     resolution: '4K + HDR',
-    monthlyPrice: '₹649',
+    monthlyPrice: 649,
     videoSoundQuality: 'Best',
     supportedDevices: 'TV, computer, mobile phone, tablet',
     devicesAtSameTime: 4,
@@ -15,7 +14,7 @@ const plans = [
   {
     name: 'Standard',
     resolution: '1080p',
-    monthlyPrice: '₹499',
+    monthlyPrice: 499,
     videoSoundQuality: 'Great',
     supportedDevices: 'TV, computer, mobile phone, tablet',
     devicesAtSameTime: 2,
@@ -24,7 +23,7 @@ const plans = [
   {
     name: 'Basic',
     resolution: '720p',
-    monthlyPrice: '₹199',
+    monthlyPrice: 199,
     videoSoundQuality: 'Good',
     supportedDevices: 'TV, computer, mobile phone, tablet',
     devicesAtSameTime: 1,
@@ -33,7 +32,7 @@ const plans = [
   {
     name: 'Mobile',
     resolution: '480p',
-    monthlyPrice: '₹149',
+    monthlyPrice: 149,
     videoSoundQuality: 'Fair',
     supportedDevices: 'Mobile phone, tablet',
     devicesAtSameTime: 1,
@@ -62,17 +61,40 @@ const ChooseAPlan = () => {
       return;
     }
 
-    const options = {
-      ...RAZORPAY_OPTIONS,
-      amount: plan.monthlyPrice.replace('₹', '') * 100, // Amount in paise
-      handler: (response) => handlePaymentSuccess(response.razorpay_payment_id),
-      modal: {
-        ondismiss: () => console.log('Transaction cancelled'),
-      },
-    };
+    try {
+      const response = await fetch('/createOrder', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          amount: plan.monthlyPrice,
+          currency: 'INR',
+          receipt: 'receipt#1',
+          payment_capture: 1,
+        }),
+      });
 
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
+      const data = await response.json();
+
+      const options = {
+        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+        amount: data.data.amount,
+        currency: data.data.currency,
+        order_id: data.data.id,
+        handler: function (response) {
+          handlePaymentSuccess(response.razorpay_payment_id);
+        },
+        theme: {
+          color: '#F37254',
+        },
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error('Error during payment:', error);
+    }
   };
 
   const handlePlanClick = (plan) => {
