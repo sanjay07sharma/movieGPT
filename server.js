@@ -28,9 +28,6 @@ app.post('/createOrder', async (req, res) => {
   }
 });
 
-app.use(cors({
-  origin: 'http://localhost:3000', // or your frontend's URL
-}));
 
 app.listen(3001, () => {
   console.log('Server running on port 3000');
