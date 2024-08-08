@@ -16,7 +16,7 @@ app.post('/createOrder', async (req, res) => {
   const { amount, currency, receipt, payment_capture } = req.body;
   try {
     const options = {
-      amount: amount * 100, // Amount in smallest currency unit
+      amount: amount * 100,
       currency,
       receipt,
       payment_capture,
