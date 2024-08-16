@@ -110,11 +110,11 @@ const ChooseAPlan = () => {
   return (
     <div className="h-[75%] pt-[30%] md:pt-[15%] md:w-full md:mx-auto p-4 sm:p-8 relative">
       <h1 className="md:text-3xl font-bold mb-8 text-center text-white">Choose the plan that's right for you</h1>
-      <div className="w-76 h-36 flex flex-wrap justify-center md:space-x-6 space-y-4">
+      <div className="w-76 h-36 flex flex-wrap justify-center md:space-x-6">
         {plans.map((plan, index) => (
           <div
             key={plan.name}
-            className={`relative w-full sm:w-80 p-6 bg-white rounded-lg shadow-md ${index === 2 ? 'border-4 border-purple-500' : ''} cursor-pointer hover:shadow-lg transition-shadow duration-200`}
+            className={`w-full sm:w-80 p-6 bg-white rounded-lg shadow-md ${index === 2 ? 'border-4 border-purple-500' : ''} cursor-pointer hover:shadow-lg transition-shadow duration-200`}
             onClick={() => handlePlanClick(plan)}
           >
             {index === 2 && (
