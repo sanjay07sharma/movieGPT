@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { RAZORPAY_OPTIONS } from '../utils/constants';
+const Razorpay = require('razorpay');
 
 const plans = [
   {
@@ -54,52 +55,35 @@ const ChooseAPlan = () => {
   };
 
   const displayRazorpay = async (plan) => {
-    const res = await loadRazorpayScript();
-
-    if (!res) {
-      alert('Razorpay SDK failed to load. Are you online?');
-      return;
-    }
-
-    try {
-      const response = await fetch('/createOrder', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          amount: plan.monthlyPrice,
-          currency: 'INR',
-          receipt: 'receipt#1',
-          payment_capture: 1,
-        }),
-      });
-
-      const data = await response.json();
-
-      const options = {
-        key: process.env.REACT_APP_RAZORPAY_KEY_ID,
-        amount: data.data.amount,
-        currency: data.data.currency,
-        order_id: data.data.id,
-        handler: function (response) {
-          handlePaymentSuccess(response.razorpay_payment_id);
-        },
-        theme: {
-          color: '#F37254',
-        },
-      };
-
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-    } catch (error) {
-      console.error('Error during payment:', error);
-    }
+    await loadRazorpayScript();
+    var options = {
+      "key_id": process.env.REACTAPP_RAZORPAY_KEY_ID,
+      "amount": "50000", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+      "currency": "INR",
+      "name": "Acme Corp", //your business name
+      "description": "Test Transaction",
+      "image": "https://example.com/your_logo",
+      "order_id": "order_9A33XWu170gUtm", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+      "callback_url": "https://eneqd3r9zrjok.x.pipedream.net/",
+      "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+          "name": "Gaurav Kumar", //your customer's name
+          "email": "gaurav.kumar@example.com",
+          "contact": "9000090000" //Provide the customer's phone number for better conversion rates 
+      },
+      "notes": {
+          "address": "Razorpay Corporate Office"
+      },
+      "theme": {
+          "color": "#3399cc"
+      }
+  };
+    var rzp1 = new Razorpay({"key_id":process.env.REACTAPP_RAZORPAY_KEY_ID});
+    rzp1.open();
   };
 
-  const handlePlanClick = (plan) => {
+  const handlePlanClick = async (plan) => {
     setSelectedPlan(plan);
-    displayRazorpay(plan);
+    await displayRazorpay(plan);
   };
 
   const handlePaymentSuccess = (paymentId) => {
@@ -118,7 +102,7 @@ const ChooseAPlan = () => {
             onClick={() => handlePlanClick(plan)}
           >
             {index === 2 && (
-              <div className="absolute top-0 right-0 bg-purple-500 text-white text-sm font-bold py-1 px-4 rounded-full">
+              <div className="ml-36 w-36 bg-purple-500 text-white text-sm font-bold px-4 mt-[-9%] rounded-full">
                 Most Popular
               </div>
             )}
