@@ -4,16 +4,17 @@ import Login from "./Login";
 
 const Body = () => {
   return (
-    <div>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
       <Router>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          <Route path="/browse" element={<Browse />} />
-        </Routes>
+        <div className="flex-grow">
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/browse" element={<Browse />} />
+          </Routes>
+        </div>
       </Router>
     </div>
-  )
-}
+  );
+};
 
-export default Body
- 
+export default Body;
