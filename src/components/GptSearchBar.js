@@ -1,66 +1,120 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import language from '../utils/languageConstants';
-import { ANTHROPIC_API_KEY, API_OPTIONS } from '../utils/constants';
+import { API_OPTIONS } from '../utils/constants';
 import { addGptMovieResult } from '../utils/gptSlice';
 import { debounce } from 'lodash';
-import Anthropic from "@anthropic-ai/sdk";
-
-const anthropic = new Anthropic({
-  apiKey: ANTHROPIC_API_KEY,
-});
+import OpenAI from "openai";
 
 const GptSearchBar = () => {
   const languageKey = useSelector(store => store.config.lang);
   const dispatch = useDispatch();
   const searchText = useRef(null);
+  const [cachedResults, setCachedResults] = useState({});
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const searchMovieTMDB  = async (movieName) => {
-    const data = await fetch(`https://api.themoviedb.org/3/search/movie?query=${movieName}`, API_OPTIONS);
-    const json = await data.json();
-    return json.results;
-  };
+  // Configure OpenAI with retry and error handling
+  const openai = new OpenAI({
+    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
+    dangerouslyAllowBrowser: true,
+    maxRetries: 2 // Add built-in retry mechanism
+  });
 
-  const handleGptSearchClick = async (event) => {
-    const gptSearchQuery = "Act as a movie recommendation system and suggest some movies for the query: "
-      + searchText.current.value +
-      " only give me the names of 5 movies, comma separated. Like the example ahead Example Result: Gadar, Sholay, Golmal, Partner, Hera Pheri";
-
+  const searchMovieTMDB = async (movieName) => {
     try {
-      const response = await anthropic.messages.create({
-        model: "claude-3-5-sonnet-20240620",
-        max_tokens: 1000,
-        temperature: 0,
-        system: "Respond only with short poems.",
-        messages: [
-          {
-            role: "user",
-            content: [
-              {
-                type: "text",
-                text: gptSearchQuery
-              }
-            ]
-          }
-        ]
-      });
-
-      const movies = response.data.choices[0].message.content.split(",");
-      for (const movie of movies) {
-        const promiseArray = searchMovieTMDB(movie.trim());
-        const movieResult = await Promise.all(promiseArray);
-        dispatch(addGptMovieResult({ movieName: movie.trim(), movieResult: movieResult }));
-      }
+      const data = await fetch(`https://api.themoviedb.org/3/search/movie?query=${movieName}`, API_OPTIONS);
+      const json = await data.json();
+      return json.results;
     } catch (error) {
-      console.log(error);
+      console.error("TMDB Search Error:", error);
+      return [];
     }
   };
 
+  const handleGptSearchClick = async () => {
+    const query = searchText.current.value.trim();
+    if (!query) return;
+
+    // Check cached results first
+    if (cachedResults[query]) {
+      dispatch(addGptMovieResult({ movieName: query, movieResult: cachedResults[query] }));
+      return;
+    }
+
+    const gptSearchQuery = "Act as a movie recommendation system and suggest some movies for the query: "
+      + query +
+      " only give me the names of 5 movies, comma separated. Like the example ahead Example Result: Gadar, Sholay, Golmal, Partner, Hera Pheri";
+
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      // Implement exponential backoff for rate limit
+      const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+      let retryCount = 0;
+      const maxRetries = 3;
+
+      while (retryCount < maxRetries) {
+        try {
+          const response = await openai.chat.completions.create({
+            model: "gpt-4o",
+            messages: [{ role: "user", content: gptSearchQuery }],
+            temperature: 1,
+            max_tokens: 256,
+            top_p: 1,
+            frequency_penalty: 0,
+            presence_penalty: 0
+          });
+
+          const movies = response.choices[0].message.content.split(",").map(movie => movie.trim());
+          const movieResults = [];
+
+          for (const movie of movies) {
+            const movieResult = await searchMovieTMDB(movie);
+            movieResults.push({ movieName: movie, movieResult: movieResult });
+          }
+
+          setCachedResults(prev => ({ ...prev, [query]: movieResults }));
+          dispatch(addGptMovieResult({ movieName: query, movieResult: movieResults }));
+          
+          break; // Success, exit retry loop
+        } catch (error) {
+          if (error.status === 429) {
+            // Rate limit hit, implement exponential backoff
+            retryCount++;
+            const backoffTime = Math.pow(2, retryCount) * 1000; // Exponential backoff
+            console.warn(`Rate limit hit. Retrying in ${backoffTime/1000} seconds...`);
+            await delay(backoffTime);
+          } else {
+            // For non-rate limit errors, rethrow
+            throw error;
+          }
+        }
+      }
+
+      if (retryCount === maxRetries) {
+        throw new Error("Max retries reached. Please try again later.");
+      }
+    } catch (error) {
+      console.error("Search Error:", error);
+      setError(error.message || "An error occurred during search");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const debouncedHandleGptSearchClick = debounce(handleGptSearchClick, 1000);
+
+  useEffect(() => {
+    return () => {
+      debouncedHandleGptSearchClick.cancel();
+    };
+  }, []);
+
   return (
     <div className="pt-[35%] lg:pt-[20%] flex justify-center bg-black bg-opacity-20">
-      <form className="p-6 m-4 w-full md:w-1/2" onSubmit={(ev) => {
-        ev.preventDefault();
-      }}>
+      <div className="p-6 m-4 w-full md:w-1/2">
         <input
           type="text"
           className="p-2 w-3/4 md:p-4 md:m-4 md:w-[60%] rounded-md"
@@ -68,10 +122,18 @@ const GptSearchBar = () => {
           ref={searchText}
         />
         <button
+          onClick={debouncedHandleGptSearchClick}
           className="p-2 m-2 md:p-4 md:m-2 bg-red-500 text-white md:w-[20%] rounded-md"
-          onClick={debounce(handleGptSearchClick, 200)}>{language[languageKey].search}
+          disabled={isLoading}
+        >
+          {isLoading ? 'Loading...' : language[languageKey].search}
         </button>
-      </form>
+        {error && (
+          <div className="text-red-500 mt-2">
+            {error}
+          </div>
+        )}
+      </div>
     </div>
   );
 };
