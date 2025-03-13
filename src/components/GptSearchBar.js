@@ -6,6 +6,11 @@ import { addGptMovieResult } from '../utils/gptSlice';
 import { debounce } from 'lodash';
 import OpenAI from "openai";
 
+const openai = new OpenAI({
+  apiKey: process.env.REACT_APP_OPENAI_KEY,
+  dangerouslyAllowBrowser:true,
+});
+
 const GptSearchBar = () => {
   const languageKey = useSelector(store => store.config.lang);
   const dispatch = useDispatch();
@@ -13,13 +18,6 @@ const GptSearchBar = () => {
   const [cachedResults, setCachedResults] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  // Configure OpenAI with retry and error handling
-  const openai = new OpenAI({
-    apiKey: process.env.REACT_APP_OPENAI_API_KEY,
-    dangerouslyAllowBrowser: true,
-    maxRetries: 2 // Add built-in retry mechanism
-  });
 
   const searchMovieTMDB = async (movieName) => {
     try {
@@ -50,52 +48,31 @@ const GptSearchBar = () => {
       setIsLoading(true);
       setError(null);
 
-      // Implement exponential backoff for rate limit
-      const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-      let retryCount = 0;
-      const maxRetries = 3;
-
-      while (retryCount < maxRetries) {
-        try {
-          const response = await openai.chat.completions.create({
-            model: "gpt-4o",
-            messages: [{ role: "user", content: gptSearchQuery }],
-            temperature: 1,
-            max_tokens: 256,
-            top_p: 1,
-            frequency_penalty: 0,
-            presence_penalty: 0
-          });
-
-          const movies = response.choices[0].message.content.split(",").map(movie => movie.trim());
-          const movieResults = [];
-
-          for (const movie of movies) {
-            const movieResult = await searchMovieTMDB(movie);
-            movieResults.push({ movieName: movie, movieResult: movieResult });
+      const response = await openai.chat.completions.create({
+        model: "gpt-4o",
+        messages: [
+          {
+            role: "user",
+            content: gptSearchQuery
           }
+        ],
+        temperature: 1,
+        max_tokens: 2048,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0
+      });
 
-          setCachedResults(prev => ({ ...prev, [query]: movieResults }));
-          dispatch(addGptMovieResult({ movieName: query, movieResult: movieResults }));
-          
-          break; // Success, exit retry loop
-        } catch (error) {
-          if (error.status === 429) {
-            // Rate limit hit, implement exponential backoff
-            retryCount++;
-            const backoffTime = Math.pow(2, retryCount) * 1000; // Exponential backoff
-            console.warn(`Rate limit hit. Retrying in ${backoffTime/1000} seconds...`);
-            await delay(backoffTime);
-          } else {
-            // For non-rate limit errors, rethrow
-            throw error;
-          }
-        }
+      const movies = response.choices[0].message.content.split(",").map(movie => movie.trim());
+      const movieResults = [];
+
+      for (const movie of movies) {
+        const movieResult = await searchMovieTMDB(movie);
+        movieResults.push({ movieName: movie, movieResult: movieResult });
       }
 
-      if (retryCount === maxRetries) {
-        throw new Error("Max retries reached. Please try again later.");
-      }
+      setCachedResults(prev => ({ ...prev, [query]: movieResults }));
+      dispatch(addGptMovieResult({ movieName: query, movieResult: movieResults }));
     } catch (error) {
       console.error("Search Error:", error);
       setError(error.message || "An error occurred during search");
