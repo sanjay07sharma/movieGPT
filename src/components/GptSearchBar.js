@@ -4,12 +4,10 @@ import language from '../utils/languageConstants';
 import { API_OPTIONS } from '../utils/constants';
 import { addGptMovieResult } from '../utils/gptSlice';
 import { debounce } from 'lodash';
-import OpenAI from "openai";
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const openai = new OpenAI({
-  apiKey: process.env.REACT_APP_OPENAI_KEY,
-  dangerouslyAllowBrowser:true,
-});
+const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const GptSearchBar = () => {
   const languageKey = useSelector(store => store.config.lang);
@@ -21,7 +19,7 @@ const GptSearchBar = () => {
 
   const searchMovieTMDB = async (movieName) => {
     try {
-      const data = await fetch(`https://api.themoviedb.org/3/search/movie?query=${movieName}`, API_OPTIONS);
+      const data = await fetch('https://api.themoviedb.org/3/search/movie?query=' + movieName + '&include_adult=false&language=en-US&page=1', API_OPTIONS);
       const json = await data.json();
       return json.results;
     } catch (error) {
@@ -48,29 +46,15 @@ const GptSearchBar = () => {
       setIsLoading(true);
       setError(null);
 
-      const response = await openai.chat.completions.create({
-        model: "gpt-4o",
-        messages: [
-          {
-            role: "user",
-            content: gptSearchQuery
-          }
-        ],
-        temperature: 1,
-        max_tokens: 2048,
-        top_p: 1,
-        frequency_penalty: 0,
-        presence_penalty: 0
-      });
+      const result = await model.generateContent(gptSearchQuery);
 
-      const movies = response.choices[0].message.content.split(",").map(movie => movie.trim());
+      const movies = result.response.text().split(",").map(movie => movie.trim());
       const movieResults = [];
-
       for (const movie of movies) {
         const movieResult = await searchMovieTMDB(movie);
         movieResults.push({ movieName: movie, movieResult: movieResult });
       }
-
+      
       setCachedResults(prev => ({ ...prev, [query]: movieResults }));
       dispatch(addGptMovieResult({ movieName: query, movieResult: movieResults }));
     } catch (error) {

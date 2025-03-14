@@ -19,7 +19,6 @@ const useMovies = () => {
       }
   });
     const json = await data.json();
-    debugger
     switch (genres) {
       case "now_playing":
         dispatch(addNowPlayingMovie(json.results));

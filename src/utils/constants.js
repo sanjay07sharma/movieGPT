@@ -5,8 +5,8 @@ export const USER_AVATAR = "https://occ-0-2087-2186.1.nflxso.net/dnm/api/v6/vN7b
 export const API_OPTIONS = {
   method: 'GET',
   headers: {
-    'Authorization': `Bearer` + process.env.REACT_APP_TMDB_TOKEN,
-    'Content-Type': 'application/json'
+    'accept': 'application/json',
+    'Authorization': `Bearer ${process.env.REACT_APP_TMDB_ACESS_TOKEN}`,
   }
 };
 
