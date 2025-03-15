@@ -8,6 +8,7 @@ const useMovies = () => {
   const dispatch = useDispatch();
   const movieGenres = ["now_playing", "popular", "top_rated", "upcoming"];
   const popularMovies = useSelector(store => store.movies.addNowPlayingMovie);
+  // const entertainementType = useSelector(store => store.movies.entertainementType);
 
   const getMovieGenres = async (genres) => {
     const url = 'https://api.themoviedb.org/3/movie/' + genres;

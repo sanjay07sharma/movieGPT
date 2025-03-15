@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const gptSlice = createSlice({
-    name : "gtpSearch",
+    name: "gtpSearch",
     initialState: {
         showGptSearch: false,
         gptMovieResults: null,
@@ -15,10 +15,14 @@ const gptSlice = createSlice({
             state.gptMovieResults = action.payload.movieResult;
             state.movieName = action.payload.movieName;
         },
+        clearGptMovieResult: (state) => {
+            state.gptMovieResults = null;
+            state.movieName = null;
+        },
     },
 });
 
-// export my acction to use in my component
-export const { toggleGptSearch, addGptMovieResult } = gptSlice.actions;
+// export my actions to use in my component
+export const { toggleGptSearch, addGptMovieResult, clearGptMovieResult } = gptSlice.actions;
 // export my reducer to use in my store
 export default gptSlice.reducer;
