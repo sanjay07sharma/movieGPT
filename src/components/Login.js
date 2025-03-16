@@ -11,7 +11,7 @@ import SignUp from "./SignUp";
 const Login = () => {
   const [signIn, setSignIn] = useState("Sign In");
   const [choosePlan, setChoosePlan] = useState(false);
-  const [errorMessages, setErrorMessages] = useState([]); // [emailError, passwordError
+  const [errorMessages, setErrorMessages] = useState([]); // [emailError, passwordError]
   const email = useRef(null);
   const password = useRef(null);
   const dispatch = useDispatch();
@@ -28,11 +28,13 @@ const Login = () => {
   };
 
   const handleButtonClick = (e) => {
+    e.preventDefault();
     const isValidCredentials = checkValidData(email?.current?.value, password?.current?.value);
     if (isValidCredentials) {
       setErrorMessages(isValidCredentials);
+      return;
     }
-    if (signIn === "Sign In" && !isValidCredentials) {
+    if (signIn === "Sign In") {
       signInWithEmailAndPassword(auth, email?.current?.value, password?.current?.value)
         .then((userCredential) => {
           // Signed in
@@ -50,7 +52,7 @@ const Login = () => {
     <div>
       <Header />
       <div className="absolute">
-        <img className="w-screen fixed h-screen object-cover md:w-screen md:h-screen" src={BG_URL} alt="logo" />
+        <img className="w-screen fixed h-screen object-cover md:w-screen md:h-screen" src={BG_URL} alt="background" />
       </div>
       {choosePlan && signIn === "Sign Up" ? (
         <ChoosePlan setChoosePlan={setChoosePlan} />
@@ -73,7 +75,7 @@ const Login = () => {
           />
           {signIn === "Sign Up" && <SignUp email={email} password={password} setErrorMessages={setErrorMessages} />}
           <button
-            className="bg-red-500 w-full hover:bg-red-700 text-white font-bold p-4 my-6 rounded focus:outline-none focus-shadow-outline"
+            className="bg-red-500 w-full hover:bg-red-700 text-white font-bold p-4 my-6 rounded focus:outline-none focus:shadow-outline"
             onClick={(e) => handleButtonClick(e)}
           >
             {signIn}

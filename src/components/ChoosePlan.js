@@ -55,6 +55,7 @@ const ChooseAPlan = () => {
   };
 
   const displayRazorpay = async (plan) => {
+    debugger  
     await loadRazorpayScript();
     var options = {
       "key_id": process.env.REACTAPP_RAZORPAY_KEY_ID,
