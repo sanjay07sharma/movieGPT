@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Browse from "./Browse";
 import Login from "./Login";
+import MovieInfo from "./MovieInfo";
 
 const Body = () => {
   return (
@@ -10,6 +11,7 @@ const Body = () => {
           <Routes>
             <Route path="/" element={<Login />} />
             <Route path="/browse" element={<Browse />} />
+            <Route path="/:movieName" element={<MovieInfo />} />
           </Routes>
         </div>
       </Router>

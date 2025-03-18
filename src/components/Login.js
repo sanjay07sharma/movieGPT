@@ -12,6 +12,7 @@ const Login = () => {
   const [signIn, setSignIn] = useState("Sign In");
   const [choosePlan, setChoosePlan] = useState(false);
   const [errorMessages, setErrorMessages] = useState([]); // [emailError, passwordError]
+  const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
   const email = useRef(null);
   const password = useRef(null);
   const dispatch = useDispatch();
@@ -48,6 +49,10 @@ const Login = () => {
     }
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
     <div>
       <Header />
@@ -66,13 +71,22 @@ const Login = () => {
             placeholder="Email or Phone number"
             className="shadow appearance-none border rounded w-full p-4 my-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
-          <input
-            ref={password}
-            type="password"
-            id="password"
-            placeholder="Password"
-            className="shadow appearance-none border rounded w-full p-4 my-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
+          <div className="relative">
+            <input
+              ref={password}
+              type={showPassword ? "text" : "password"}
+              id="password"
+              placeholder="Password"
+              className="shadow appearance-none border rounded w-full p-4 my-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
+            <button
+              type="button"
+              className="absolute right-3 top-5 text-gray-500 hover:text-gray-700"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
           {signIn === "Sign Up" && <SignUp email={email} password={password} setErrorMessages={setErrorMessages} />}
           <button
             className="bg-red-500 w-full hover:bg-red-700 text-white font-bold p-4 my-6 rounded focus:outline-none focus:shadow-outline"

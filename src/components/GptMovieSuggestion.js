@@ -9,7 +9,6 @@ const GptMovieSuggestion = () => {
       <div>
         {
           gptMovieResults.map((movie) => {
-            debugger
             <MovieList key={movie.movieName} title={movie.movieName} movies={movie.movieResult}/>
           })
         }

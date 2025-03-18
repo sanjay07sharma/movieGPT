@@ -30,7 +30,6 @@ const Header = () => {
       if (user) {
         // User is signed in
         const { uid, email, displayName, photoURL } = user;
-        debugger
         dispatch(addUser({ uid, email, displayName, photoURL }));
         navigate("/browse");
       } else {
